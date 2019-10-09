@@ -1,17 +1,56 @@
 let container = document.querySelector(".container");
-for (let i = 0; i < 16 * 16; i++) {
-  let i = document.createElement("div");
-  i.classList.add("square");
-  i.style.gridColumn = i;
-  i.style.gridRow = i;
-  container.appendChild(i);
+let resetButton = document.querySelector("button[class~='reset']");
+let reSizeButton = document.querySelector("button[class~='resize']");
+let lastSize;
+
+drawSqaures(16);
+
+resetButton.addEventListener("click", event => {
+  reset();
+});
+
+reSizeButton.addEventListener("click", event => {
+  let input = window.prompt("please enter the size of the grid");
+  reset();
+  drawSqaures(input);
+});
+
+function reset() {
+  getSqaures().forEach(square => {
+    square.style.opacity = 1;
+  });
 }
 
-let squares = document.querySelectorAll(".square");
-squares.forEach(square => {
-  square.addEventListener('mouseenter', event => {
-  //event.target.classList.add('fadeOut');
-  event.target.style.opacity = 0;
-  console.log(event.target);
+function drawSqaures(size) {
+
+  if (lastSize != null) {
+    let divs = document.querySelectorAll(".square");
+    divs.forEach(div => {
+      div.parentNode.removeChild(div);
+    });
+  }
+
+  container.style.gridTemplateColumns = `repeat(${size}, 1fr)`;
+
+
+  for (let i = 0; i < size * size; i++) {
+    let k = document.createElement("div");
+    k.classList.add("square");
+    container.appendChild(k);
+  }
+
+  lastSize = size;
+  addListener();
+}
+
+function getSqaures() {
+  return document.querySelectorAll(".square");
+}
+
+function addListener() {
+  getSqaures().forEach(square => {
+    square.addEventListener("mouseenter", event => {
+      event.target.style.opacity = 0;
+    });
   });
-});
+}
